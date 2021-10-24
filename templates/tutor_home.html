@@ -91,13 +91,11 @@ span.psw {
 
 <div class="topnav">
   <h2>StuTor</h2>
-  <!-- <a>Hi {{ name }} </a> -->
-  <a href="/register1">Signup</a>
-  <a href="/login1">Login</a>
-  <a href="/">Home</a>
+  <a href="/logout">Logout</a>
+  <a href="/home_tutor">Home</a>
+  <a>Hi {{ session['name'] }} </a>
   </div>
-<p>{{user_type}} </p>
-<form action="/tutor_home" method="post" style="border:1px solid #ccc">
+<form action="/student_list" method="post" style="border:1px solid #ccc">
   <div class="container">
     <h1>Tutor profile</h1>
     <p>Please fill in the information to complete your tutor profile.</p>
@@ -110,7 +108,7 @@ span.psw {
     <input type="text" placeholder="Ex: bachelors or masters" name="edu_level" required>
     <br>
     <label for="pay_per_hour"><b>What would you like to be your pay per hour </b></label><br>
-    <input type="text" placeholder="hourly rate" name="pay_per_hpur" required>
+    <input type="text" placeholder="hourly rate" name="pay_per_hour" required>
     <br>
         
     <button type="save" class="save">save</button>

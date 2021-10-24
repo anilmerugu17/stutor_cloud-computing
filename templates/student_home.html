@@ -91,13 +91,12 @@ span.psw {
 
   <div class="topnav">
     <h2>StuTor</h2>
-    <!-- <a>Hi {{ name }} </a> -->
-    <a href="/register1">Signup</a>
-    <a href="/login1">Login</a>
-    <a href="/">Home</a>
+    <a href="/logout">Logout</a>
+    <a href="/home_student">Home</a>
+    <a>Hi {{ session['name'] }} </a>
   </div>
 
-<form action="/student_home" method="post" style="border:1px solid #ccc">
+<form action="/tutor_list" method="post" style="border:1px solid #ccc">
   <div class="container">
     <h1>Student profile</h1>
     <p>Please fill in the information to complete your student profile.</p>

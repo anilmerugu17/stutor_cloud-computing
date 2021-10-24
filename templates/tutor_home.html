@@ -97,20 +97,20 @@ span.psw {
   <a href="/">Home</a>
   </div>
 <p>{{user_type}} </p>
-<form action="/profile" style="border:1px solid #ccc">
+<form action="/tutor_home" method="post" style="border:1px solid #ccc">
   <div class="container">
     <h1>Tutor profile</h1>
     <p>Please fill in the information to complete your tutor profile.</p>
     <hr>
 
-    <label for="subject"><b>What subject can you tutor?</b></label><br>
-    <input type="text" placeholder="Subject" name="subject" required>
+    <label for="subject_name"><b>What subject can you tutor?</b></label><br>
+    <input type="text" placeholder="Subject" name="subject_name" required>
     <br>
-	<label for="edu-level"><b>What edcation level of students are you capable of tutoring</b></label><br>
-    <input type="text" placeholder="Ex: bachelors or masters" name="edu-level" required>
+	<label for="edu_level"><b>What edcation level of students are you capable of tutoring</b></label><br>
+    <input type="text" placeholder="Ex: bachelors or masters" name="edu_level" required>
     <br>
-    <label for="hour-rate"><b>What would you like to be your pay per hour </b></label><br>
-    <input type="text" placeholder="hourly rate" name="hour-rate" required>
+    <label for="pay_per_hour"><b>What would you like to be your pay per hour </b></label><br>
+    <input type="text" placeholder="hourly rate" name="pay_per_hpur" required>
     <br>
         
     <button type="save" class="save">save</button>

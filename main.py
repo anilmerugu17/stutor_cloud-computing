@@ -54,13 +54,30 @@ def login1():
 def register1():    
     return render_template("signup.html", title="signup page")
 
-@app.route("/tutor_home")
+@app.route("/tutor_home", methods=['POST'])
 def tutor_home():
+    subject_name = request.form['subject_name']
+    edu_level = request.form['edu_level']
+    pay_per_hour = request.form['pay_per_hour']
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        cursor.execute('INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour) VALUES(%s, %s, %s)', (subject_name, edu_level, pay_per_hour))
+    conn.commit()
+    conn.close()
+
     return render_template("tutor_home.html", title="tutor home page")
 
-@app.route("/student_home")
+@app.route("/student_home", methods=['POST'])
 def student_home():
-    return render_template("student_home.html", title="student page")
+    subject_name = request.form['subject_name']
+    edu_level = request.form['edu_level']
+    pay_per_hour = request.form['pay_per_hour']
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        cursor.execute('INSERT INTO student_profile (subject_name, edu_level, pay_per_hour) VALUES(%s, %s, %s)', (subject_name, edu_level, pay_per_hour))
+    conn.commit()
+    conn.close()
+    return render_template("student_home.html", title="student home page")
 
 
 @app.route("/docs")

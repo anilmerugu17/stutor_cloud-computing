@@ -1,5 +1,45 @@
 <!DOCTYPE html>
 <html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    function validateEmail(){
+        var email = document.getElementById("email");
+        var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        if (!filter.test(email.value)) {
+            alert('Please provide a valid email address');
+            email.focus();
+
+        }
+        return false;
+    }
+
+    function validatePassword(){
+        var pwd = document.getElementById("psw");
+        var filter = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+
+         if (!filter.test(pwd.value)) {
+            alert('Password should be min 1 uppercase letter, min 1 lowercase letter, min 1 special character, min 1 number and min 8 characters.');
+            pwd.focus();
+         }
+         return false;
+    }
+
+    function matchPassword(){
+        var pwd = document.getElementById("psw");
+        var confPwd = document.getElementById("psw-repeat");
+        if(pwd.value !== confPwd.value) {
+
+            alert("Password and Confirm password should match");
+            confPwd.focus();
+        }
+        else
+            document.getElementById("student").focus();
+        return false;
+    }
+</script>
+
 <style>
 body {
   margin: 0;
@@ -96,31 +136,32 @@ span.psw {
   <a href="/">Home</a>
   </div>
 
-<form action="/register" method="POST" style="border:1px solid #ccc">
+<form name="signup" action="/register" method="POST" style="border:1px solid #ccc">
   <div class="container">
-    <h1>Sign Up</h1>
+    <h1>Register Once. User ever.</h1>
     <p>Please fill in this form to create an account.</p>
     <hr>
 
     <label for="email"><b>Email id </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-    <input type="text" placeholder="Enter Email" name="email" required>
+    <input type="text" placeholder="Enter Email" name="email" id="email"  required>
     <br>
+      <p id="result"></p>
 	<label for="name"><b>Full Name</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-    <input type="text" placeholder="Enter Name" name="name" required>
+    <input type="text" placeholder="Enter Name" name="name"  onfocus="validateEmail();" required>
     <br>
     <label for="psw"><b>Password &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+    <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
     <br>
     <label for="psw-repeat"><b>Confirm Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" onfocus="validatePassword();"  required>
     <br>
     <label for="user-type"><b>User Type </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
     <label for="user-type"><b>Student</b></label>
-    <input type="radio" name="user-type" id="student" value="student" required>
+    <input type="radio" name="user-type" id="user-type" value="student" onfocus="matchPassword();" required>
     <label for="user-type">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tutor</b></label>
-    <input type="radio" name="user-type" id="tutor" value="tutor" required>
+    <input type="radio" name="user-type" id="user-type" value="tutor" onfocus="matchPassword();" required>
     <br>
-    
+    <br>
     <button type="submit" class="signupbtn">Sign Up</button>
     
     <!-- <br>

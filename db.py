@@ -19,6 +19,6 @@ def open_connection():
         # so that your application can use 127.0.0.1:3306 to connect to your
         # Cloud SQL instance
         host = '127.0.0.1'
-        conn = pymysql.connect(user=db_user, password=db_password,
-                              host=host, db=db_name)
+        conn = pymysql.connect(user='dbadmin', password='root',
+                               host='localhost', db='stutor_db')
     return conn

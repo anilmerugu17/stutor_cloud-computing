@@ -5,7 +5,8 @@ app = Flask(__name__)
 
 app.secret_key = '12345'
 
-#for tutor list inside student pages comes from save in student profile
+
+# for tutor list inside student pages comes from save in student profile
 @app.route("/tutor_list", methods=['POST'])
 def tutor_list():
     subject_name = request.form['subject_name']
@@ -13,13 +14,14 @@ def tutor_list():
     pay_per_hour = request.form['pay_per_hour']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM tutor_profile WHERE subject_name=%s',(subject_name))
+        cursor.execute('SELECT * FROM tutor_profile WHERE subject_name=%s AND edu_level=%s', (subject_name, edu_level))
         tutors = cursor.fetchall()
     conn.commit()
     conn.close()
-    return render_template("tutor_list.html", tutors = tutors)
+    return render_template("tutor_list.html", tutors=tutors)
 
-#for student list inside tutor pages comes here from tutor profile
+
+# for student list inside tutor pages comes here from tutor profile
 @app.route("/student_list", methods=['POST'])
 def students_list():
     subject_name = request.form['subject_name']
@@ -27,13 +29,14 @@ def students_list():
     pay_per_hour = request.form['pay_per_hour']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM student_profile WHERE subject_name=%s',(subject_name))
+        cursor.execute('SELECT * FROM student_profile WHERE subject_name=%s', (subject_name))
         students = cursor.fetchall()
     conn.commit()
     conn.close()
-    return render_template("student_list.html", students = students)
+    return render_template("student_list.html", students=students)
 
-#registrations route
+
+# registrations route
 @app.route("/register", methods=['POST'])
 def register():
     email = request.form['email']
@@ -42,20 +45,22 @@ def register():
     user_type = request.form['user-type']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO stutor_table (name, email, password, user_type) VALUES(%s, %s, %s, %s)', (name, email, pwd, user_type))
+        cursor.execute('INSERT INTO stutor_table (name, email, password, user_type) VALUES(%s, %s, %s, %s)',
+                       (name, email, pwd, user_type))
     conn.commit()
     conn.close()
 
     return render_template("login.html")
 
-#login route
+
+# login route
 @app.route("/login", methods=['POST'])
 def login():
     email = request.form['email']
     pwd = request.form['psw']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM stutor_table WHERE email=%s AND password=%s',(email, pwd))
+        cursor.execute('SELECT * FROM stutor_table WHERE email=%s AND password=%s', (email, pwd))
         account = cursor.fetchone()
     conn.commit()
     conn.close()
@@ -73,7 +78,7 @@ def login():
         return "login failed"
 
 
-#tutor first edit profile page comes from register to here
+# tutor first edit profile page comes from register to here
 @app.route("/tutor_home", methods=['POST'])
 def tutor_home():
     subject_name = request.form['subject_name']
@@ -82,13 +87,16 @@ def tutor_home():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)', (subject_name, edu_level, pay_per_hour, email))
+        cursor.execute(
+            'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email))
     conn.commit()
     conn.close()
 
     return render_template("tutor_home.html", title="tutor home page")
 
-#student first edit profile page comes from register to here 
+
+# student first edit profile page comes from register to here
 @app.route("/student_home", methods=['POST'])
 def student_home():
     subject_name = request.form['subject_name']
@@ -97,46 +105,96 @@ def student_home():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)', (subject_name, edu_level, pay_per_hour, email))
+        cursor.execute(
+            'INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email))
     conn.commit()
     conn.close()
     return render_template("student_home.html", title="student home page")
 
 
-#index page, comes here when you enter the site
+# index page, comes here when you enter the site
 @app.route("/")
 def homepage():
     return render_template("index.html", title="STutor")
 
-#tutor login page comes here everytime tutor logs in
+
+# tutor login page comes here everytime tutor logs in
 @app.route("/home_tutor")
 def home_tutor():
-    return render_template("index_tutor.html")
-    
-#student home page, comes here everytime student logs in. 
+    email = session['email']
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT * FROM tutor_profile WHERE email=%s', (email))
+        tutor = cursor.fetchall()
+    if len(tutor) != 0:
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT * FROM student_profile WHERE subject_name=%s', (tutor[0]))
+            students = cursor.fetchall()
+        conn.commit()
+        conn.close()
+        return render_template("student_list.html", students=students)
+
+    else:
+        conn.commit()
+        conn.close()
+        return render_template("index_tutor.html", title="tutor home")
+
+# student home page, comes here everytime student logs in.
 @app.route("/home_student")
 def home_student():
-    return render_template("index_student.html", title="Student home")
+    email = session['email']
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT * FROM student_profile WHERE email=%s', email)
+        student = cursor.fetchall()
+    if len(student)!=0:
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT * FROM tutor_profile WHERE subject_name=%s', (student[0]))
+            tutors = cursor.fetchall()
+        conn.commit()
+        conn.close()
+        return render_template("tutor_list.html", title="Student home", tutors=tutors)
+    else:
+        conn.commit()
+        conn.close()
+        return render_template("index_student.html", title="Student home")
 
-#goes to login page when clicked on top menu 
+
+# goes to login page when clicked on top menu
 @app.route("/login1")
-def login1():    
+def login1():
     return render_template("login.html", title="login page")
 
-#goes to register page when clicked on top menu 
+
+# goes to register page when clicked on top menu
 @app.route("/register1")
-def register1():    
+def register1():
     return render_template("signup.html", title="signup page")
 
-#logout route
+
+# goes to student profile when clicked on profile page from student pages
+@app.route("/student_profile")
+def student_profile():
+    return render_template("student_home.html", title="student profile page")
+
+
+# goes to tutor profile when clicked on profile page from tutor pages
+@app.route("/tutor_profile")
+def tutor_profile():
+    return render_template("tutor_home.html", title="tutor profile page")
+
+
+# logout route
 @app.route('/logout')
 def logout():
     # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return render_template("login.html")
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    # Redirect to login page
+    return render_template("login.html")
+
 
 # @app.route("/docs")
 # def docs():

@@ -85,6 +85,14 @@ span.psw {
   text-decoration: none;
   font-size: 17px;
 }
+select{
+    width: 30%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+}
 </style>
 
 <body>
@@ -92,6 +100,7 @@ span.psw {
 <div class="topnav">
   <h2>StuTor</h2>
   <a href="/logout">Logout</a>
+  <a href="/tutor_profile">Profile</a>
   <a href="/home_tutor">Home</a>
   <a>Hi {{ session['name'] }} </a>
   </div>
@@ -105,7 +114,13 @@ span.psw {
     <input type="text" placeholder="Subject" name="subject_name" required>
     <br>
 	<label for="edu_level"><b>What edcation level of students are you capable of tutoring</b></label><br>
-    <input type="text" placeholder="Ex: bachelors or masters" name="edu_level" required>
+<!--{#    <input type="text" placeholder="Ex: bachelors or masters" name="edu_level" required>#}-->
+      <select name="edu_level" required>
+          <option value="High School">High School</option>
+          <option value="Bachelors">Bachelors</option>
+          <option value="Masters">Masters</option>
+          <option value="PhD">PhD</option>
+      </select>
     <br>
     <label for="pay_per_hour"><b>What would you like to be your pay per hour </b></label><br>
     <input type="text" placeholder="hourly rate" name="pay_per_hour" required>

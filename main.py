@@ -13,7 +13,7 @@ def tutor_list():
     pay_per_hour = request.form['pay_per_hour']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM tutor_profile WHERE subject_name=%s',(subject_name))
+        cursor.execute('SELECT * FROM TUTOR_PROFILE WHERE subject_name=%s',(subject_name))
         tutors = cursor.fetchall()
     conn.commit()
     conn.close()
@@ -27,7 +27,7 @@ def students_list():
     pay_per_hour = request.form['pay_per_hour']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM student_profile WHERE subject_name=%s',(subject_name))
+        cursor.execute('SELECT * FROM STUDENT_PROFILE WHERE subject_name=%s',(subject_name))
         students = cursor.fetchall()
     conn.commit()
     conn.close()
@@ -42,7 +42,7 @@ def register():
     user_type = request.form['user-type']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO stutor_table (name, email, password, user_type) VALUES(%s, %s, %s, %s)', (name, email, pwd, user_type))
+        cursor.execute('INSERT INTO STUTOR_TABLE (name, email, password, user_type) VALUES(%s, %s, %s, %s)',(name, email, pwd, user_type))
     conn.commit()
     conn.close()
 
@@ -55,7 +55,7 @@ def login():
     pwd = request.form['psw']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM stutor_table WHERE email=%s AND password=%s',(email, pwd))
+        cursor.execute('SELECT * FROM STUTOR_TABLE WHERE email=%s AND password=%s',(email, pwd))
         account = cursor.fetchone()
     conn.commit()
     conn.close()
@@ -73,7 +73,7 @@ def login():
         return "login failed"
 
 
-#tutor first edit profile page comes from register to here
+# tutor first edit profile page comes from register to here
 @app.route("/tutor_home", methods=['POST'])
 def tutor_home():
     subject_name = request.form['subject_name']
@@ -82,13 +82,13 @@ def tutor_home():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)', (subject_name, edu_level, pay_per_hour, email))
+        cursor.execute('INSERT INTO TUTOR_PROFILE (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)',(subject_name, edu_level, pay_per_hour, email))
     conn.commit()
     conn.close()
 
     return render_template("tutor_home.html", title="tutor home page")
 
-#student first edit profile page comes from register to here 
+#student first edit profile page comes from register to here
 @app.route("/student_home", methods=['POST'])
 def student_home():
     subject_name = request.form['subject_name']
@@ -97,13 +97,13 @@ def student_home():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)', (subject_name, edu_level, pay_per_hour, email))
+        cursor.execute('INSERT INTO STUDENT_PROFILE (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',(subject_name, edu_level, pay_per_hour, email))
     conn.commit()
     conn.close()
     return render_template("student_home.html", title="student home page")
 
 
-#index page, comes here when you enter the site
+# index page, comes here when you enter the site
 @app.route("/")
 def homepage():
     return render_template("index.html", title="STutor")
@@ -112,40 +112,31 @@ def homepage():
 @app.route("/home_tutor")
 def home_tutor():
     return render_template("index_tutor.html")
-    
-#student home page, comes here everytime student logs in. 
+
+#student home page, comes here everytime student logs in.
 @app.route("/home_student")
 def home_student():
     return render_template("index_student.html", title="Student home")
 
-#goes to login page when clicked on top menu 
+#goes to login page when clicked on top menu
 @app.route("/login1")
-def login1():    
+def login1():
     return render_template("login.html", title="login page")
 
-#goes to register page when clicked on top menu 
+#goes to register page when clicked on top menu
 @app.route("/register1")
-def register1():    
+def register1():
     return render_template("signup.html", title="signup page")
 
 #logout route
 @app.route('/logout')
 def logout():
     # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return render_template("login.html")
-
-# @app.route("/docs")
-# def docs():
-#     return render_template("page.html", title="docs page")
-
-
-# @app.route("/about")
-# def about():
-#     return render_template("page.html", title="about page")
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    # Redirect to login page
+    return render_template("login.html")
 
 
 if __name__ == "__main__":

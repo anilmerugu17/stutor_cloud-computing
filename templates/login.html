@@ -32,7 +32,7 @@ input[type=text], input[type=password] {
 }
 
 button {
-  background-color: #357bf2;
+  background-color: black;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -43,6 +43,13 @@ button {
 
 button:hover {
   opacity: 0.8;
+}
+
+@media only screen and (max-width: 1075px)
+._8esk {
+    height: 496px;
+    margin: 0 40px;
+    width: auto;
 }
 
 .cancelbtn {
@@ -58,7 +65,7 @@ button:hover {
 
 
 .container {
-  padding: 16px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -76,9 +83,9 @@ span.psw {
   float: right;
   color: #f2f2f2;
   text-align: center;
-  padding: 14px 16px;
+  padding: 14px 10px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .topnav a:hover {
@@ -104,24 +111,24 @@ span.psw {
 <body>
 
 <div class="topnav">
-  <h2>StuTor</h2>
   <a href="/register1">Signup</a>
   <a class="active" href="/login1">Login</a>
   <a href="/">Home</a>
 </div>
 
-<div class="container">
-<h2 class="container">Stutor Login</h2>
+<div class="container" style="padding:50px;">
+<h2>STUTOR</h2>
+  <p>Connects both students and tutors in a single platform</p>
 </div>
 <form action="/login" method="post">
 
-  <div class="container">
+  <div class="container" style="padding:60px;">
     <label for="email"><b>Username</b></label>
     <input type="text" placeholder="Enter Email" name="email" id="email" required>
     <br>
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" onfocus="validateEmail();" required>
-    <br>    
+    <br>  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button type="submit">Login</button>
     <br>
     <label>
@@ -130,7 +137,9 @@ span.psw {
     <br>
     <!-- <br>
     <span>Forgot <a href="#">password?</a></span> -->
-     
+    <label>
+      <p>Not a member? <a href="/register1">Create new account</a></p>
+    </label>
   </div>
 </form>
 

@@ -116,7 +116,7 @@ def student_home():
 # index page, comes here when you enter the site
 @app.route("/")
 def homepage():
-    return render_template("index.html", title="STutor")
+    return render_template("login.html", title="STutor")
 
 
 # tutor login page comes here everytime tutor logs in
@@ -140,6 +140,7 @@ def home_tutor():
         conn.close()
         return render_template("index_tutor.html", title="tutor home")
 
+
 # student home page, comes here everytime student logs in.
 @app.route("/home_student")
 def home_student():
@@ -148,7 +149,7 @@ def home_student():
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM student_profile WHERE email=%s', email)
         student = cursor.fetchall()
-    if len(student)!=0:
+    if len(student) != 0:
         with conn.cursor() as cursor:
             cursor.execute('SELECT * FROM tutor_profile WHERE subject_name=%s', (student[0]))
             tutors = cursor.fetchall()

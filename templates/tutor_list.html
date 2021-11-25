@@ -90,6 +90,7 @@ table, th, td {
   </div>
 <div></div>
 <div class="center" style="padding-left:16px">
+    {% if tutors is defined and tutors|length > 0 %}
     <table id="custom">
       <tr>
         <th>Email</th>
@@ -106,6 +107,9 @@ table, th, td {
     </tr>
     {% endfor %}
     </table>
+    {% else %}
+        <h3> At present there are no tutors matching your criteria, we'll let you when we get to know.</h3>
+    {% endif %}
 </div>
 </body>
 </html>

@@ -77,13 +77,26 @@ table, th, td {
   color: white;
 }
 
+button{
+    background-color: #333333;
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 </style>
 
 </head>
 <body>
 
 <div class="topnav">
-    <h2>StuTor</h2>
+     <img src="../static/stutor.PNG" height="50" width="75">
     <a href="/logout">Logout</a>
     <a href="/tutor_profile">Profile</a>
     <a href="/home_tutor">Home</a>
@@ -99,6 +112,7 @@ table, th, td {
         <th>Subject</th>
         <th>Education level</th>
           <th>Pay per hour</th>
+          <th>Contact</th>
       </tr>
     {%for student in students%}
     <tr>
@@ -106,6 +120,7 @@ table, th, td {
     <td>{{student[0]}}</td>
     <td>{{student[1]}}</td>
     <td>{{student[2]}}</td>
+    <td><a href="mailto:{{tutor[3]}}"><button>Email</button></td>
     </tr>
     {% endfor %}
     </table>

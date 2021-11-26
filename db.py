@@ -24,5 +24,5 @@ def open_connection():
         #                        host='localhost', db='stutor_db')
         # Shiva_local
         conn = pymysql.connect(user='root', password='root',
-                               host='localhost', db='Mysql')
+                               host='localhost', db='stutor_db')
     return conn

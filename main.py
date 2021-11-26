@@ -134,7 +134,7 @@ def login():
                 students = cursor.fetchall()
             conn1.commit()
             conn1.close()
-            return render_template("tutor_home.html", students=students)
+            return render_template("student_list.html", students=students)
     else:
         return "login failed"
 
@@ -180,7 +180,7 @@ def home_tutor():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT  S.email,S.subject_name,S.edu_level,S.pay_per_hour from student_profile S,'
+        cursor.execute('SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email from student_profile S,'
                        ' tutor_profile T where T.email = %s and T.subject_name = S.subject_name '
                        'and T.edu_level = S.edu_level', email)
         students = cursor.fetchall()
@@ -195,7 +195,7 @@ def home_student():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT  T.email,T.subject_name, T.edu_level, T.pay_per_hour from tutor_profile T,'
+        cursor.execute('SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email from tutor_profile T,'
                        ' student_profile S where S.email = %s and S.subject_name = T.subject_name '
                        'and S.edu_level = T.edu_level', email)
         tutors = cursor.fetchall()
@@ -223,7 +223,7 @@ def tutor_profile():
     with conn.cursor() as cursor:
         cursor.execute('SELECT subject_name, edu_level, pay_per_hour FROM tutor_profile WHERE email=%s', email)
         tutor = cursor.fetchone()
-    return render_template("tutor_home.html", title="tutor profile page", tutor=tutor)
+    return render_template("tutor_profile.html", title="tutor profile page", tutor=tutor)
 
 
 # From Student profile, when students edits his data and clicks on update my criteriaupdateStudentData

@@ -94,6 +94,15 @@ select{
       border: 1px solid #ccc;
       box-sizing: border-box;
 }
+
+input{
+    width: 30%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+}
 </style>
 
 <body>
@@ -125,7 +134,7 @@ select{
       </select>
     <br>
     <label for="pay_per_hour"><b>How much you are willing to pay per hour </b></label><br>
-    <input type="text" placeholder="hourly rate" name="pay_per_hour" required>
+    <input type="number" min="0" placeholder="hourly rate" name="pay_per_hour" required>
     <br>
         
     <button type="save" class="save">save</button>

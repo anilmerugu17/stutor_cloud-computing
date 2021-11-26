@@ -111,8 +111,8 @@ def login():
     conn.close()
     if account:
         session['loggedin'] = True
-        session['name'] = account[0]
-        session['email'] = account[1]
+        session['email'] = account[0]
+        session['name'] = account[1]
         session['user_type'] = account[3]
         user_type = account[3]
         if user_type == 'student':
@@ -264,7 +264,7 @@ def update_tutor_profile():
     pay_per_hour = request.form['pay_per_hour']
     conn = open_connection()
     with conn.cursor() as cursor:
-        exists = cursor.execute('SELECT * FROM student_profile where email=%s', email)
+        exists = cursor.execute('SELECT * FROM tutor_profile where email=%s', email)
         if exists:
             cursor.execute('UPDATE tutor_profile set subject_name = %s, edu_level = %s, pay_per_hour = %s where email = '
                                '%s', (subject_name, edu_level, pay_per_hour, email))

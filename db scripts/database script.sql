@@ -18,3 +18,5 @@ CREATE TABLE TUTOR_PROFILE(subject_name varchar(30)  NOT NULL,
                             pay_per_hour INT,
                             email varchar(45) PRIMARY KEY
                             );
+
+ALTER TABLE STUTOR_TABLE CHANGE password password varchar(72) NOT NULL;

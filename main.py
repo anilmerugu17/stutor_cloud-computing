@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 from db import open_connection
+import bcrypt
 
 app = Flask(__name__)
 
@@ -76,6 +77,8 @@ def register():
     email = request.form['email']
     name = request.form['name']
     pwd = request.form['psw']
+    hashed = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+    pwd = hashed
     user_type = request.form['user-type']
     conn = open_connection()
     with conn.cursor() as cursor:
@@ -105,54 +108,59 @@ def login():
     pwd = request.form['psw']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM stutor_table WHERE email=%s AND password=%s', (email, pwd))
+        cursor.execute('SELECT * FROM stutor_table WHERE email=%s', email)
         account = cursor.fetchone()
+        if bcrypt.checkpw(pwd.encode('utf-8'), account[2].encode('utf-8')):
+            if account:
+                session['loggedin'] = True
+                session['name'] = account[1]
+                session['email'] = account[0]
+                session['user_type'] = account[3]
+                user_type = account[3]
+                if user_type == 'student':
+                    conn1 = open_connection()
+                    with conn1.cursor() as cursor:
+                        cursor.execute(
+                            'SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email from tutor_profile T,'
+                            ' student_profile S where S.email = %s and S.subject_name = T.subject_name '
+                            'and S.edu_level = T.edu_level', session['email'])
+                        tutors = cursor.fetchall()
+                    conn1.commit()
+                    conn1.close()
+                    conn2 = open_connection()
+                    with conn2.cursor() as cursor:
+                        exists = cursor.execute('SELECT * FROM STUDENT_PROFILE WHERE email=%s', session['email'])
+                        if exists:
+                            return render_template("tutor_list.html", tutors=tutors)
+                        else:
+                            return render_template("student_home.html")
+                    conn2.commit()
+                    conn2.close()
+                elif user_type == 'tutor':
+                    conn1 = open_connection()
+                    with conn1.cursor() as cursor:
+                        cursor.execute(
+                            'SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email from student_profile S,'
+                            ' tutor_profile T where T.email = %s and T.subject_name = S.subject_name '
+                            'and T.edu_level = S.edu_level', session['email'])
+                        students = cursor.fetchall()
+                    conn1.commit()
+                    conn1.close()
+                    conn2 = open_connection()
+                    with conn2.cursor() as cursor:
+                        exists = cursor.execute('SELECT * FROM TUTOR_PROFILE WHERE email=%s', session['email'])
+                        if exists:
+                            return render_template("student_list.html", students=students)
+                        else:
+                            return render_template("tutor_home.html")
+                        conn2.commit()
+                        conn2.close()
+            else:
+                return "login failed"
+        else:
+            return "Incorrect Password"
     conn.commit()
     conn.close()
-    if account:
-        session['loggedin'] = True
-        session['name'] = account[1]
-        session['email'] = account[0]
-        session['user_type'] = account[3]
-        user_type = account[3]
-        if user_type == 'student':
-            conn1 = open_connection()
-            with conn1.cursor() as cursor:
-                cursor.execute('SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email from tutor_profile T,'
-                               ' student_profile S where S.email = %s and S.subject_name = T.subject_name '
-                               'and S.edu_level = T.edu_level', session['email'])
-                tutors = cursor.fetchall()
-            conn1.commit()
-            conn1.close()
-            conn2 = open_connection()
-            with conn2.cursor() as cursor:
-                exists = cursor.execute('SELECT * FROM STUDENT_PROFILE WHERE email=%s', session['email'])
-                if exists:
-                    return render_template("tutor_list.html", tutors=tutors)
-                else:
-                    return render_template("student_home.html")
-            conn2.commit()
-            conn2.close()
-        elif user_type == 'tutor':
-            conn1 = open_connection()
-            with conn1.cursor() as cursor:
-                cursor.execute('SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email from student_profile S,'
-                               ' tutor_profile T where T.email = %s and T.subject_name = S.subject_name '
-                               'and T.edu_level = S.edu_level', session['email'])
-                students = cursor.fetchall()
-            conn1.commit()
-            conn1.close()
-            conn2 = open_connection()
-            with conn2.cursor() as cursor:
-                exists = cursor.execute('SELECT * FROM TUTOR_PROFILE WHERE email=%s', session['email'])
-                if exists:
-                    return render_template("student_list.html", students=students)
-                else:
-                    return render_template("tutor_home.html")
-                conn2.commit()
-                conn2.close()
-    else:
-        return "login failed"
 
 
 # tutor first edit profile page comes from register to here
@@ -282,8 +290,9 @@ def update_tutor_profile():
     with conn.cursor() as cursor:
         exists = cursor.execute('SELECT * FROM tutor_profile where email=%s', email)
         if exists:
-            cursor.execute('UPDATE tutor_profile set subject_name = %s, edu_level = %s, pay_per_hour = %s where email = '
-                               '%s', (subject_name, edu_level, pay_per_hour, email))
+            cursor.execute(
+                'UPDATE tutor_profile set subject_name = %s, edu_level = %s, pay_per_hour = %s where email = '
+                '%s', (subject_name, edu_level, pay_per_hour, email))
         else:
             cursor.execute(
                 'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',

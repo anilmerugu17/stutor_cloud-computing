@@ -20,3 +20,6 @@ CREATE TABLE TUTOR_PROFILE(subject_name varchar(30)  NOT NULL,
                             );
 
 ALTER TABLE STUTOR_TABLE CHANGE password password varchar(72) NOT NULL;
+
+ALTER TABLE STUDENT_PROFILE ADD COLUMN NAME varchar(20);
+ALTER TABLE TUTOR_PROFILE ADD COLUMN NAME varchar(20);

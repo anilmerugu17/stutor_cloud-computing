@@ -32,11 +32,12 @@ def tutor_list():
     edu_level = request.form['edu_level']
     pay_per_hour = request.form['pay_per_hour']
     email = session['email']
+    name = session['name']
     conn1 = open_connection()
     with conn1.cursor() as cursor:
         cursor.execute(
-            'INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',
-            (subject_name, edu_level, pay_per_hour, email))
+            'INSERT INTO student_profile (subject_name, edu_level, pay_per_hour, email, name) VALUES(%s, %s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email, name))
     conn1.commit()
     conn1.close()
     conn = open_connection()
@@ -55,11 +56,12 @@ def students_list():
     edu_level = request.form['edu_level']
     pay_per_hour = request.form['pay_per_hour']
     email = session['email']
+    name = session['name']
     conn1 = open_connection()
     with conn1.cursor() as cursor:
         cursor.execute(
-            'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)',
-            (subject_name, edu_level, pay_per_hour, email))
+            'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email, name) VALUES(%s, %s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email, name))
     conn1.commit()
     conn1.close()
     conn = open_connection()
@@ -121,7 +123,7 @@ def login():
                     conn1 = open_connection()
                     with conn1.cursor() as cursor:
                         cursor.execute(
-                            'SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email from tutor_profile T,'
+                            'SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email, T.name from tutor_profile T,'
                             ' student_profile S where S.email = %s and S.subject_name = T.subject_name '
                             'and S.edu_level = T.edu_level', session['email'])
                         tutors = cursor.fetchall()
@@ -140,7 +142,7 @@ def login():
                     conn1 = open_connection()
                     with conn1.cursor() as cursor:
                         cursor.execute(
-                            'SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email from student_profile S,'
+                            'SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email, S.name from student_profile S,'
                             ' tutor_profile T where T.email = %s and T.subject_name = S.subject_name '
                             'and T.edu_level = S.edu_level', session['email'])
                         students = cursor.fetchall()
@@ -170,11 +172,12 @@ def tutor_home():
     edu_level = request.form['edu_level']
     pay_per_hour = request.form['pay_per_hour']
     email = session['email']
+    name = session['name']
     conn = open_connection()
     with conn.cursor() as cursor:
         cursor.execute(
-            'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email) VALUES(%s, %s, %s, %s)',
-            (subject_name, edu_level, pay_per_hour, email))
+            'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour, email, name) VALUES(%s, %s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email, name))
     conn.commit()
     conn.close()
 
@@ -188,11 +191,12 @@ def student_home():
     edu_level = request.form['edu_level']
     pay_per_hour = request.form['pay_per_hour']
     email = session['email']
+    name = session['name']
     conn = open_connection()
     with conn.cursor() as cursor:
         cursor.execute(
-            'INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',
-            (subject_name, edu_level, pay_per_hour, email))
+            'INSERT INTO student_profile (subject_name, edu_level, pay_per_hour,email, name) VALUES(%s, %s, %s, %s, %s)',
+            (subject_name, edu_level, pay_per_hour, email, name))
     conn.commit()
     conn.close()
     return render_template("student_home.html", title="student home page")
@@ -204,7 +208,7 @@ def home_tutor():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email from student_profile S,'
+        cursor.execute('SELECT  S.subject_name,S.edu_level,S.pay_per_hour,S.email, S.name from student_profile S,'
                        ' tutor_profile T where T.email = %s and T.subject_name = S.subject_name '
                        'and T.edu_level = S.edu_level', email)
         students = cursor.fetchall()
@@ -219,7 +223,7 @@ def home_student():
     email = session['email']
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email from tutor_profile T,'
+        cursor.execute('SELECT  T.subject_name, T.edu_level, T.pay_per_hour, T.email, T.name from tutor_profile T,'
                        ' student_profile S where S.email = %s and S.subject_name = T.subject_name '
                        'and S.edu_level = T.edu_level', email)
         tutors = cursor.fetchall()
@@ -283,6 +287,7 @@ def update_student_profile():
 @app.route("/updateTutorData", methods=['POST'])
 def update_tutor_profile():
     email = session['email']
+    name = session['name']
     subject_name = request.form['subject_name']
     edu_level = request.form['edu_level']
     pay_per_hour = request.form['pay_per_hour']
@@ -295,8 +300,8 @@ def update_tutor_profile():
                 '%s', (subject_name, edu_level, pay_per_hour, email))
         else:
             cursor.execute(
-                'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour,email) VALUES(%s, %s, %s, %s)',
-                (subject_name, edu_level, pay_per_hour, email))
+                'INSERT INTO tutor_profile (subject_name, edu_level, pay_per_hour,email, name) VALUES(%s, %s, %s, %s, %s)',
+                (subject_name, edu_level, pay_per_hour, email, name))
         conn.commit()
         conn.close()
     conn1 = open_connection()

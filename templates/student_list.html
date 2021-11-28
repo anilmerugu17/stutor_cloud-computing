@@ -108,7 +108,7 @@ button{
         <p class="center">Here is the list of students matching your criteria</p>
     <table id="custom">
       <tr>
-        <th>Email</th>
+        <th>Name</th>
         <th>Subject</th>
         <th>Education level</th>
           <th>Pay per hour</th>
@@ -116,7 +116,7 @@ button{
       </tr>
     {%for student in students%}
     <tr>
-    <td>{{student[3]}}</td>
+    <td>{{student[4]}}</td>
     <td>{{student[0]}}</td>
     <td>{{student[1]}}</td>
     <td>{{student[2]}}</td>
